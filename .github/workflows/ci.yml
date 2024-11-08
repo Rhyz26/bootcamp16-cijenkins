@@ -1,24 +1,52 @@
-name: CICD
+# name: CICD
 
-on: push
-jobs:
- build_job: 
-   runs-on: ubuntu-latest
-   steps:
-   - name: Run many tests
-     run: echo "build job"
+# on: push
+# jobs:
+#  build_job: 
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Run many tests
+#      run: echo "build job"
     
     
- test_job:
-   needs: build_job 
-   runs-on: ubuntu-latest
-   steps:
-   - name: Deploy
-     run: echo "test job"
+#  test_job:
+#    needs: build_job 
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Deploy
+#      run: echo "test job"
       
- deploy_job:
-   needs: test_job 
-   runs-on: ubuntu-latest
-   steps:
-   - name: echo "deploy job"
-     run: echo "deploy job"   
+#  deploy_job:
+#    needs: test_job 
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: echo "deploy job"
+#      run: echo "deploy job"   
+
+
+
+
+
+
+name: Java Project with Maven
+
+on:
+  push:
+    branches: ["main", "staging", "testbranch"]
+  pull_request:
+    branches: ["main"]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Java Runtime
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B compile --file pom.xml
+
